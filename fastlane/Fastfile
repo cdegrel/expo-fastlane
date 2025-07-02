@@ -30,6 +30,7 @@ end
 
 def validate_customer(customer)
   customer_path = File.join(CUSTOMERS_DIR, customer)
+  UI.success('✅ Customer folder exists: #{CUSTOMERS_DIR}')
   UI.user_error!("❌ Customer folder does not exist: #{customer_path}") unless File.directory?(customer_path)
 end
 
