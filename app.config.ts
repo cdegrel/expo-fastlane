@@ -2,6 +2,8 @@ import type { ConfigContext, ExpoConfig } from '@expo/config'
 import path from 'path'
 import fs from 'fs'
 
+console.log('call config')
+
 const customer = process.env.CUSTOMER
 if (!customer) {
   throw new Error('Veuillez définir la variable d\'environnement CUSTOMER')

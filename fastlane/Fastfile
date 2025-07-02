@@ -2,7 +2,7 @@ require 'json'
 
 # --- CONSTS ---
 
-PROJECT_ROOT = File.expand_path("..", Dir.pwd)
+PROJECT_ROOT = "."
 CUSTOMERS_DIR = File.join(PROJECT_ROOT, "customers")
 
 ANDROID_DIR = File.join(PROJECT_ROOT, "android")
@@ -120,7 +120,7 @@ platform :android do
   lane :release do |options|
     prepare(options)
     version(options)
-    clean(options)
+    # clean(options)
     build(options)
     # submit(options)
   end
