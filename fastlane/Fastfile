@@ -59,18 +59,18 @@ platform :android do
   lane :version do |options|
     customer = current_customer(options)
 
-    UI.header("🔧 Incrementing version code")
-    current_version_code = google_play_track_version_codes(
-      package_name: package_name_for(customer),
-      json_key: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT"]
-    )[0]
-    version_code = current_version_code + 1
+    # UI.header("🔧 Incrementing version code")
+    # current_version_code = google_play_track_version_codes(
+    #   package_name: package_name_for(customer),
+    #   json_key: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT"]
+    # )[0]
+    # version_code = current_version_code + 1
 
 
-    UI.message("🔢 Android version code will be set from #{current_version_code} to #{version_code}")
+    # UI.message("🔢 Android version code will be set from #{current_version_code} to #{version_code}")
     increment_version_code(
         gradle_file_path: File.join(APP_DIR, "build.gradle"),
-        version_code: version_code,
+        version_code: 1,
     )
   end
 
@@ -82,17 +82,24 @@ platform :android do
 
   desc "[Android] Build"
   lane :build do |_options|
-    gradle(
-      task: "bundle",
-      build_type: "release",
-      project_dir: ANDROID_DIR,
-      properties: {
-        "android.injected.signing.store.file" => ENV["KEYSTORE_FILE"],
-        "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
-        "android.injected.signing.key.alias" => ENV["KEYSTORE_KEY_ALIAS"],
-        "android.injected.signing.key.password" => ENV["KEYSTORE_KEY_PASSWORD"],
-      }
-    )
+    UI.success("✅ Starting Android build...")
+    UI.success("📂 Android project directory: #{ANDROID_DIR}")
+    UI.success("📂 Android AAB output path: #{AAB_PATH}")
+    UI.success("🔑 Ensure environment variables are set for keystore: KEYSTORE_FILE #{ENV["KEYSTORE_FILE"]}, KEYSTORE_PASSWORD #{ENV["KEYSTORE_PASSWORD"]}, KEYSTORE_KEY_ALIAS #{ENV["KEYSTORE_KEY_ALIAS"]}, KEYSTORE_KEY_PASSWORD #{ENV["KEYSTORE_KEY_PASSWORD"]}")
+    UI.header("🔨 Building Android AAB")
+
+
+    # gradle(
+    #   task: "bundle",
+    #   build_type: "release",
+    #   project_dir: ANDROID_DIR,
+    #   properties: {
+    #     "android.injected.signing.store.file" => ENV["KEYSTORE_FILE"],
+    #     "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
+    #     "android.injected.signing.key.alias" => ENV["KEYSTORE_KEY_ALIAS"],
+    #     "android.injected.signing.key.password" => ENV["KEYSTORE_KEY_PASSWORD"],
+    #   }
+    # )
 
     UI.user_error!("❌ AAB not found at #{AAB_PATH}") unless File.exist?(AAB_PATH)
     UI.success("✅ Android build successful: #{AAB_PATH}")
