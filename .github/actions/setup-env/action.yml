@@ -1,5 +1,5 @@
 name: Setup Node & Fastlane
-description: Common setup for Node.js, Ruby (Fastlane), and NPM deps
+description: Common setup for Node.js, Ruby (Fastlane), and Bun deps
 
 runs:
   using: "composite"
@@ -16,6 +16,7 @@ runs:
 
     - name: Install dependencies
       run: bun install --frozen-lockfile
+      shell: bash
 
     - name: Setup Ruby & Fastlane
       uses: ruby/setup-ruby@v1
