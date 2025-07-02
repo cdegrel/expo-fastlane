@@ -32,17 +32,18 @@ jobs:
         run: |
           DIR="customers"
           CUSTOMER="${{ github.event.inputs.customer }}"
+          echo "matrix=[\"$CUSTOMER\"]" >> "$GITHUB_OUTPUT"
 
-          if [[ -n "$CUSTOMER" ]]; then
-            if [[ ! -d "$DIR/$CUSTOMER" ]]; then
-              echo "Error: Customer '$CUSTOMER' does not exist in $DIR directory."
-              exit 1
-            fi
-            echo "matrix=[\"$CUSTOMER\"]" >> "$GITHUB_OUTPUT"
-          else
-            APPS=$(find "$DIR" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | jq -R -s -c 'split("\n")[:-1]')
-            echo "matrix=$APPS" >> "$GITHUB_OUTPUT"
-          fi
+        # if [[ -n "$CUSTOMER" ]]; then
+        #   if [[ ! -d "$DIR/$CUSTOMER" ]]; then
+        #     echo "Error: Customer '$CUSTOMER' does not exist in $DIR directory."
+        #     exit 1
+        #   fi
+        #   echo "matrix=[\"$CUSTOMER\"]" >> "$GITHUB_OUTPUT"
+        # else
+        #   APPS=$(find "$DIR" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | jq -R -s -c 'split("\n")[:-1]')
+        #   echo "matrix=$APPS" >> "$GITHUB_OUTPUT"
+        # fi
 
   android:
     needs: prepare
