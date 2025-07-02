@@ -66,6 +66,9 @@ platform :android do
     # )[0]
     # version_code = current_version_code + 1
 
+    UI.success("PWD #{Dir.pwd}")
+    UI.success("GOOGLE_PLAY_SERVICE_ACCOUNT #{ENV["GOOGLE_PLAY_SERVICE_ACCOUNT"]}")
+
 
     # UI.message("🔢 Android version code will be set from #{current_version_code} to #{version_code}")
     increment_version_code(
