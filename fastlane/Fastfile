@@ -62,7 +62,7 @@ platform :android do
     UI.header("🔧 Incrementing version code")
     current_version_code = google_play_track_version_codes(
       package_name: package_name_for(customer),
-      json_key: "#{Dir.pwd}/#{ENV["GOOGLE_PLAY_SERVICE_ACCOUNT"]}"
+      json_key: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT"]
     )[0]
     version_code = current_version_code + 1
 
