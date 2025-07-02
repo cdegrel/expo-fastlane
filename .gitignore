@@ -35,3 +35,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+google-play-service-account.json
+release.keystore
+.env

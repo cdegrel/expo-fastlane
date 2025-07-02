@@ -1,7 +1,6 @@
 {
-  "expo": {
-    "name": "expo-fastlane",
-    "slug": "expo-fastlane",
+    "name": "Southeast Missourian News",
+    "slug": "com.c1.app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,17 +12,18 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.semissourian.pubgenapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.semissourian.pubgenapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     }
   }
-}

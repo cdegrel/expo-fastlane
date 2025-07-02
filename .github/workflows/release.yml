@@ -1,0 +1,112 @@
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform'
+        required: true
+        default: 'all'
+        type: choice
+        options: [android, ios, all]
+
+      # version:
+      #   description: 'Version'
+      #   required: true
+      #   default: 'patch'
+      #   type: choice
+      #   options: [patch, minor, major]
+
+      customer:
+        description: 'Leave empty to build all customers'
+        required: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: set-matrix
+        run: |
+          DIR="customers"
+          CUSTOMER="${{ github.event.inputs.customer }}"
+
+          if [[ -n "$CUSTOMER" ]]; then
+            if [[ ! -d "$DIR/$CUSTOMER" ]]; then
+              echo "Error: Customer '$CUSTOMER' does not exist in $DIR directory."
+              exit 1
+            fi
+            echo "matrix=[\"$CUSTOMER\"]" >> "$GITHUB_OUTPUT"
+          else
+            APPS=$(find "$DIR" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | jq -R -s -c 'split("\n")[:-1]')
+            echo "matrix=$APPS" >> "$GITHUB_OUTPUT"
+          fi
+
+  android:
+    needs: prepare
+    if: ${{ inputs.platform == 'android' || inputs.platform == 'all' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.prepare.outputs.matrix) }}
+
+    steps:
+      - name: Checkout Git Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Env
+        uses: ./.github/actions/setup-env
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Decode Keystore File
+        id: keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > release.keystore
+          echo "filePath=release.keystore" >> "$GITHUB_OUTPUT"
+
+      - name: Decode Google Play Service Account File
+        id: google_play_service_account
+        run: |
+          echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}" | base64 --decode > google-play-service-account.json
+          echo "filePath=google-play-service-account.json" >> "$GITHUB_OUTPUT"
+
+      - name: Android release
+        run: fastlane android release package:${{ matrix.package }} #version:${{ github.event.inputs.version }}
+        env:
+          KEYSTORE_FILE: ${{ steps.keystore.outputs.filePath }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEYSTORE_KEY_ALIAS: ${{ secrets.KEYSTORE_KEY_ALIAS}}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
+          GOOGLE_PLAY_SERVICE_ACCOUNT: ${{ steps.google_play_service_account.outputs.filePath }}
+
+      - name: Upload AAB as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.package }}-release.aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+
+  # ios:
+  #   needs: prepare
+  #   if: ${{ inputs.platform == 'ios' || inputs.platform == 'all' }}
+  #   runs-on: macos-latest
+  #   strategy:
+  #     matrix:
+  #       package: ${{ fromJson(needs.prepare.outputs.matrix) }}
+
+  #   steps:
+  #     - name: Checkout Git Repository
+  #       uses: actions/checkout@v4
+
+  #     - name: Setup Env
+  #       uses: ./.github/actions/setup-env
