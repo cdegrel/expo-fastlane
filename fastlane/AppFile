@@ -1,0 +1,7 @@
+json_key_file("path/your/play-store-credentials.json")
+
+team_id "5Q552T9UPV"
+
+#   "appleId": "accounts@pubgen.ai",
+#         "ascAppId": "6745899240",
+#         "appleTeamId": "5Q552T9UPV"
