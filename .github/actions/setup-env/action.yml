@@ -1,5 +1,6 @@
 name: Setup Node & Fastlane
 description: Common setup for Node.js, Ruby (Fastlane), and NPM deps
+
 runs:
   using: "composite"
   steps:
@@ -10,6 +11,7 @@ runs:
 
     - name: Install dependencies
       run: npm ci
+      shell: bash
 
     - name: Setup Ruby & Fastlane
       uses: ruby/setup-ruby@v1
