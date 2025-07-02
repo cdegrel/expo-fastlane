@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package: ${{ fromJson(needs.prepare.outputs.matrix) }}
+        customer: ${{ fromJson(needs.prepare.outputs.matrix) }}
 
     steps:
       - name: Checkout Git Repository
@@ -82,7 +82,7 @@ jobs:
           echo "filePath=google-play-service-account.json" >> "$GITHUB_OUTPUT"
 
       - name: Android release
-        run: fastlane android release package:${{ matrix.package }} #version:${{ github.event.inputs.version }}
+        run: fastlane android release customer:${{ matrix.customer }} #version:${{ github.event.inputs.version }}
         env:
           KEYSTORE_FILE: ${{ steps.keystore.outputs.filePath }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
