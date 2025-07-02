@@ -2,7 +2,7 @@ require 'json'
 
 # --- CONSTS ---
 
-PROJECT_ROOT = "."
+PROJECT_ROOT = Dir.pwd
 CUSTOMERS_DIR = File.join(PROJECT_ROOT, "customers")
 
 ANDROID_DIR = File.join(PROJECT_ROOT, "android")
