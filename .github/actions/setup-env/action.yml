@@ -14,18 +14,11 @@ runs:
       with:
         bun-version: '1.2.17'
 
-    - name: Cache Bun directory
-      uses: actions/cache@v3
-      with:
-        path: ~/.bun
-        key: bun-cache-${{ runner.os }}-${{ hashFiles('bun.lockb') }}
-        restore-keys: bun-cache-${{ runner.os }}-
-
-    - name: Install JS dependencies with Bun
+    - name: Install JS dependencies
       run: bun install --frozen-lockfile
       shell: bash
 
-    - name: Setup Ruby & Fastlane
+    - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: '3.3'
