@@ -62,8 +62,8 @@ jobs:
       - name: Decode Keystore File
         id: keystore
         run: |
-          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > release.keystore
-          echo "filePath=release.keystore" >> "$GITHUB_OUTPUT"
+          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > "${{ github.workspace }}/fastlane/release.keystore"
+          echo "filePath=${{ github.workspace }}/fastlane/release.keystore" >> "$GITHUB_OUTPUT"
 
       - name: Decode Google Play Service Account File
         id: google_play_service_account
