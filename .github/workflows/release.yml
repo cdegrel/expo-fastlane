@@ -84,7 +84,7 @@ jobs:
       - name: Upload AAB as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.package }}-release.aab
+          name: ${{ matrix.customer }}-release.aab
           path: android/app/build/outputs/bundle/release/app-release.aab
 
   # ios:
