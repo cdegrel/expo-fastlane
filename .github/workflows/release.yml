@@ -72,8 +72,9 @@ jobs:
           echo "filePath=google-play-service-account.json" >> "$GITHUB_OUTPUT"
 
       - name: Android release
-        run: bundle exec fastlane android release customer:${{ matrix.customer }} #version:${{ github.event.inputs.version }}
+        run: bundle exec fastlane android release #customer:${{ matrix.customer }} version:${{ github.event.inputs.version }}
         env:
+          CUSTOMER: ${{ matrix.customer }} 
           KEYSTORE_FILE: ${{ steps.keystore.outputs.filePath }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEYSTORE_KEY_ALIAS: ${{ secrets.KEYSTORE_KEY_ALIAS}}
